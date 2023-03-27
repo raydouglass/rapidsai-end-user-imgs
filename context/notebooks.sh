@@ -18,4 +18,4 @@ for REPO in "${NB_REPOS[@]}"; do
 done
 
 pushd "/dependencies"
-ls | xargs conda-merge > /test_notebooks_dependencies.yaml
+conda-merge ./*.yaml > /test_notebooks_dependencies.yaml
