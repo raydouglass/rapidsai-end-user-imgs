@@ -49,7 +49,8 @@ RUN --mount=type=cache,target=/opt/conda/pkgs \
         "python=${PYTHON_VER}.*" \
         # Strip the patch version of CUDA_VER
         "cudatoolkit=${CUDA_VER%.*}.*" \
-        ipython
+        ipython \
+    && conda clean -afy
 
 CMD ["ipython"]
 
@@ -64,13 +65,15 @@ WORKDIR /home/rapids
 COPY --from=dependencies --chown=rapids /test_notebooks_dependencies.yaml test_notebooks_dependencies.yaml
 
 RUN --mount=type=cache,target=/opt/conda/pkgs \
-    mamba env update -n base -f test_notebooks_dependencies.yaml
+    mamba env update -n base -f test_notebooks_dependencies.yaml \
+    && conda clean -afy
 
 RUN --mount=type=cache,target=/opt/conda/pkgs \
     mamba install -y -n base \
         jupyterlab \
         dask-labextension \
-        jupyterlab-nvdashboard
+        jupyterlab-nvdashboard \
+    && conda clean -afy
 
 COPY --from=dependencies --chown=rapids /notebooks /home/rapids/notebooks
 
